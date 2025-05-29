@@ -10,7 +10,10 @@ public class Test {
     private static final Logger log = LoggerFactory.getLogger(Test.class);
 
     public static void main(String[] args) {
-        HeadUtil headUtil = new HeadUtil.Builder().enableCapes(true).setCacheManager(HeadUtil.SkinCacheType.CAFFEINE.get()).build();
+        HeadUtil headUtil = new HeadUtil.Builder()
+                .enableCapes(true)
+                .setCacheManager(HeadUtil.SkinCacheType.CAFFEINE)
+                .build();
         UUID uuid = UUID.fromString("3d5a16c7-708c-4dfc-b0f5-e8d7bc790a33");
         System.out.println("Starting Test: Request player's skin and cape");
         System.out.println("\n");
@@ -20,12 +23,20 @@ public class Test {
             System.out.println("Cape: "+profile.cape());
             System.out.println("\n");
         }).join();
-        loopTest(headUtil, uuid, "Caffeine");
-        headUtil = new HeadUtil.Builder().enableCapes(true).setCacheManager(HeadUtil.SkinCacheType.REDIS.get()).build();
-        loopTest(headUtil, uuid, "Redis");
+        long time1 = loopTest(headUtil, uuid, "Caffeine");
+        headUtil = new HeadUtil.Builder().enableCapes(true).setCacheManager(HeadUtil.SkinCacheType.REDIS).build();
+        long time2 = loopTest(headUtil, uuid, "Redis");
+        if(time1 > time2) {
+            long time = time1 - time2;
+            System.out.println("\nRedis was "+time+"ms faster! ("+(time/100000)+"ms per request)");
+        } else {
+            long time = time2 - time1;
+            System.out.println("\nCaffeine was "+time+"ms faster! ("+((double)time/(double)100000)+"ms faster per request)");
+        }
+
     }
 
-    private static void loopTest(HeadUtil headUtil, UUID uuid, String test) {
+    private static long loopTest(HeadUtil headUtil, UUID uuid, String test) {
         int count = 100000;
         AtomicLong totalTime = new AtomicLong(0);
         for(int i=0; i<5000; i++) {
@@ -42,6 +53,7 @@ public class Test {
 
         System.out.println("\nFinished "+test+" test with a total time of "+totalTime.get()+"ms and "+count+" requests");
         System.out.println("Averaged "+((double)totalTime.get() / (double)count)+"ms per request");
+        return totalTime.get();
     }
 
 }

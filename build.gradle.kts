@@ -9,6 +9,8 @@ plugins {
 group = "rs.jamie"
 version = "1.0.0"
 
+
+
 repositories {
     mavenCentral()
     maven {
@@ -46,4 +48,9 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
