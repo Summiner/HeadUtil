@@ -20,53 +20,44 @@ public class HeadUtil {
     }
 
     public static class Builder {
-        private ApiManager apiManager;
-        private SkinCache cache = new CaffeineCache();
+        private SkinCacheType cacheType = SkinCacheType.CAFFEINE;
         private String sessionServer = "https://sessionserver.mojang.com/session/minecraft/profile/";
+        private String redis = "redis://localhost";
         private boolean capes = false;
 
-        public Builder() {
-            apiManager = new ApiManager(sessionServer, capes);
-        }
-
         public @NotNull Builder setSessionServer(@NotNull String sessionServer) {
-            this.apiManager = new ApiManager(sessionServer, capes);
             return this;
         }
 
-        public @NotNull Builder setCacheManager(@NotNull SkinCache cache) {
-            this.cache = cache;
+        public @NotNull Builder setCacheManager(@NotNull SkinCacheType cacheType) {
+            this.cacheType = cacheType;
+            return this;
+        }
+
+        public @NotNull Builder setRedisServer(@NotNull String connectionUrl) {
+            this.redis = connectionUrl;
             return this;
         }
 
         public @NotNull Builder enableCapes(boolean capes) {
             this.capes = capes;
-            this.apiManager = new ApiManager(sessionServer, capes);
             return this;
         }
 
         public @NotNull HeadUtil build() {
-            return new HeadUtil(apiManager, cache);
+            SkinCache cache;
+            if(cacheType == SkinCacheType.REDIS) cache = new RedisSkinCache(redis);
+            else cache = new CaffeineCache();
+
+            return new HeadUtil(new ApiManager(sessionServer, capes), cache);
         }
 
     }
 
     public enum SkinCacheType {
 
-        REDIS {
-            @Override
-            public SkinCache get() {
-                return new RedisSkinCache();
-            }
-        },
-        CAFFEINE {
-            @Override
-            public SkinCache get() {
-                return new CaffeineCache();
-            }
-        };
-
-        public abstract SkinCache get();
+        REDIS,
+        CAFFEINE;
 
     }
 

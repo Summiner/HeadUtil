@@ -11,8 +11,8 @@ public class RedisSkinCache implements SkinCache {
 
     private final RedisStringAsyncCommands<UUID, PlayerTextures> redis;
 
-    public RedisSkinCache() {
-         this.redis = RedisClient.create("redis://localhost").connect(new PlayerProfileRedisCodec()).async();
+    public RedisSkinCache(String url) {
+         this.redis = RedisClient.create(url).connect(new PlayerProfileRedisCodec()).async();
     }
 
     @Override
