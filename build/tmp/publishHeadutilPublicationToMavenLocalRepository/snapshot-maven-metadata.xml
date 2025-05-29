@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>rs.jamie</groupId>
+  <artifactId>headutil</artifactId>
+  <versioning>
+    <lastUpdated>20250529143015</lastUpdated>
+    <snapshot>
+      <timestamp>20250529.143015</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.0-20250529.143015-1</value>
+        <updated>20250529143015</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>module</extension>
+        <value>1.0-20250529.143015-1</value>
+        <updated>20250529143015</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>all</classifier>
+        <extension>jar</extension>
+        <value>1.0-20250529.143015-1</value>
+        <updated>20250529143015</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.0-20250529.143015-1</value>
+        <updated>20250529143015</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+  <version>1.0-SNAPSHOT</version>
+</metadata>
