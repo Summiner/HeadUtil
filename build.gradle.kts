@@ -42,7 +42,6 @@ publishing {
 tasks {
     val shadowJar = named<ShadowJar>("shadowJar") {
         configurations = listOf(project.configurations.getByName("shadow"))
-        archiveFileName.set("PunishBridge.jar")
     }
 
     build {
