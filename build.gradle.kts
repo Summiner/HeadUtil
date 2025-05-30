@@ -9,13 +9,8 @@ plugins {
 group = "rs.jamie"
 version = "1.0.0"
 
-
-
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://libraries.minecraft.net")
-    }
 }
 
 dependencies {
@@ -33,9 +28,6 @@ publishing {
             artifactId = "headutil"
             version = "${project.version}"
         }
-    }
-    repositories {
-        mavenLocal()
     }
 }
 

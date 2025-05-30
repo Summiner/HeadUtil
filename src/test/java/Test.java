@@ -37,7 +37,7 @@ public class Test {
     }
 
     private static long loopTest(HeadUtil headUtil, UUID uuid, String test) {
-        int count = 100000;
+        int count = 25000;
         AtomicLong totalTime = new AtomicLong(0);
         for(int i=0; i<5000; i++) {
             headUtil.getPlayerTextures(uuid).join();

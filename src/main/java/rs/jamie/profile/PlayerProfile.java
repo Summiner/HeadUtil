@@ -13,16 +13,24 @@ public record PlayerProfile(UUID id, String name, List<ProfileProperty> properti
         String texture = getTextures();
         if(texture==null) return null;
         String data = new String(Base64.getDecoder().decode(texture));
-        JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
-        return jsonObject.getAsJsonObject("textures").getAsJsonObject("SKIN").get("url").getAsString();
+        try {
+            JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
+            return jsonObject.getAsJsonObject("textures").getAsJsonObject("SKIN").get("url").getAsString();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public String getCape() {
         String texture = getTextures();
         if(texture==null) return null;
         String data = new String(Base64.getDecoder().decode(texture));
-        JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
-        return jsonObject.getAsJsonObject("textures").getAsJsonObject("CAPE").get("url").getAsString();
+        try {
+            JsonObject jsonObject = JsonParser.parseString(data).getAsJsonObject();
+            return jsonObject.getAsJsonObject("textures").getAsJsonObject("CAPE").get("url").getAsString();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public String getTextures() {

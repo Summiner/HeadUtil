@@ -97,7 +97,7 @@ public class HeadUtil {
         return CompletableFuture.supplyAsync(() -> {
             PlayerTextures textures = cache.getSkin(uuid);
             if(textures!=null) return textures;
-            textures = apiManager.getTextures(apiManager.getProfile(uuid).join()).join();
+            textures = apiManager.getTextures(apiManager.getProfile(uuid).join());
             cache.addSkin(uuid, textures);
             return textures;
         });

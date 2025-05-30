@@ -7,6 +7,7 @@ import rs.jamie.profile.PlayerProfile;
 import rs.jamie.gson.UUIDDeserializer;
 import rs.jamie.profile.PlayerTextures;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -39,30 +40,43 @@ class ApiManager {
         });
     }
 
-    public CompletableFuture<PlayerTextures> getTextures(PlayerProfile profile) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                String skin = profile.getSkin();
-                String cape = profile.getCape();
-                String head = null;
-                if(skin!=null) {
+    public PlayerTextures getTextures(PlayerProfile profile) {
+        String skin = profile.getSkin();
+        String cape = profile.getCape();
+        String head = null;
+        CompletableFuture<String> skinFuture;
+        CompletableFuture<String> capeFuture;
+        if(skin!=null) {
+            String finalSkin = skin;
+            skinFuture = CompletableFuture.supplyAsync(() -> {
+                try {
                     HttpClient client = HttpClient.newHttpClient();
-                    HttpRequest request = HttpRequest.newBuilder().uri(new URI(skin)).GET().build();
-                    HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
-                    skin = Base64.getEncoder().encodeToString(response.body());
-                    head = SkinCropper.cropImage(skin).join();
+                    HttpRequest request = HttpRequest.newBuilder().uri(new URI(finalSkin)).GET().build();
+                    HttpResponse<byte[]> response = null;
+                    response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+                    return Base64.getEncoder().encodeToString(response.body());
+                } catch (Exception e) {
+                    return null;
                 }
-                if(CAPES&&cape!=null) {
+            });
+        } else skinFuture = null;
+        if(CAPES&&cape!=null) {
+            String finalCape = cape;
+            capeFuture = CompletableFuture.supplyAsync(() -> {
+                try {
                     HttpClient client = HttpClient.newHttpClient();
-                    HttpRequest request = HttpRequest.newBuilder().uri(new URI(cape)).GET().build();
+                    HttpRequest request = HttpRequest.newBuilder().uri(new URI(finalCape)).GET().build();
                     HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
-                    cape = Base64.getEncoder().encodeToString(response.body());
-                } else cape = null;
-                return new PlayerTextures(profile.id(), skin, head, cape);
-            } catch (Exception e) {
-                return null;
-            }
-        });
+                    return Base64.getEncoder().encodeToString(response.body());
+                } catch (Exception e) {
+                    return null;
+                }
+            });
+        } else capeFuture = null;
+        if(skinFuture!=null) skin = skinFuture.join();
+        if(skin!=null) head = SkinCropper.cropImage(skin).join();
+        if(capeFuture!=null) cape = capeFuture.join();
+        return new PlayerTextures(profile.id(), skin, head, cape);
     }
 
 
